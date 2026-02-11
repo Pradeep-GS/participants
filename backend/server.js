@@ -37,17 +37,33 @@ mongoose.connect(process.env.MONGO_URI)
 const frontendPath = path.join(__dirname, '../frontend/dist');
 const isProduction = process.env.NODE_ENV === 'production' || process.env.STACKBLITZ;
 
+const fs = require('fs');
+
 if (isProduction) {
-    console.log('Mode: Production/StackBlitz (Serving Static Files)');
-    app.use(express.static(frontendPath));
-    app.get('*', (req, res) => {
-        res.sendFile(path.resolve(frontendPath, 'index.html'));
-    });
+    if (fs.existsSync(frontendPath)) {
+        console.log('Mode: Production/StackBlitz (Serving Static Files)');
+        app.use(express.static(frontendPath));
+        app.get('*', (req, res) => {
+            res.sendFile(path.resolve(frontendPath, 'index.html'));
+        });
+    } else {
+        console.warn('WARNING: Frontend dist folder not found at:', frontendPath);
+        app.get('*', (req, res) => {
+            res.status(404).send('Frontend build (dist) not found. Please run "npm run build" in the frontend directory.');
+        });
+    }
 } else {
     console.log('Mode: Development');
-    // In development, handle the root / with a helpful message
     app.get('/', (req, res) => {
-        res.send('Backend Server is running. Access the frontend via Vite dev server or build the project.');
+        res.setHeader('Content-Type', 'text/html');
+        res.send(`
+            <div style="font-family: sans-serif; padding: 50px; text-align: center; background: #0f172a; color: #f8fafc; min-height: 100vh;">
+                <h1 style="color: #38bdf8;">VSBECART Backend is Running</h1>
+                <p>To view the app, visit the frontend dev server:</p>
+                <a href="http://localhost:5173" style="color: #38bdf8; font-size: 1.5rem;">http://localhost:5173</a>
+                <p style="margin-top: 30px; color: #94a3b8;">(Or run <code>npm run build</code> in the frontend folder to serve it from this port)</p>
+            </div>
+        `);
     });
 }
 

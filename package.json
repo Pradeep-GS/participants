@@ -1,0 +1,12 @@
+{
+    "name": "vsbecart-monorepo",
+    "version": "1.0.0",
+    "description": "KANAL 2k26 - Rhythm of Logic",
+    "scripts": {
+        "install-all": "cd backend && npm install && cd ../frontend && npm install",
+        "build-frontend": "cd frontend && npm run build",
+        "start-backend": "cd backend && npm start",
+        "dev": "npm run install-all && npm run build-frontend && npm run start-backend",
+        "stackblitz": "npm run build-frontend && cd backend && node server.js"
+    }
+}
