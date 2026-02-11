@@ -10,15 +10,15 @@ File Name: ./run_vsbecart.bat
 [2] BACKEND URLs & ROUTES
 --------------------------------------------------------------------------------
 AUTHENTICATION:
-- User Registration: POST /auth/register
-- User Login:        POST /auth/login
+- User Registration: POST /api/auth/register
+- User Login:        POST /api/auth/login
 
 PRODUCTS:
-- Get All Products:  GET /products
-- Single Product:    GET /products/${id}
+- Get All Products:  GET /api/products
+- Single Product:    GET /api/products/${id}
 
 CART OPERATIONS (Requires JWT Token):
-- View Cart:         GET /cart
-- Add to Cart:       POST /cart/add
-- Remove Item:       POST /cart/remove
+- View Cart:         GET /api/cart
+- Add to Cart:       POST /api/cart/add
+- Remove Item:       POST /api/cart/remove
 ---------------------------------------------------------------------------------
