@@ -14,7 +14,10 @@ start "VSBECART Frontend" cmd /c "cd /d %~dp0frontend && npm run dev"
 
 echo ==========================================
 echo Systems are launching in separate windows.
-echo Frontend: http://localhost:5173
-echo Backend:  http://localhost:5000
+echo.
+echo FRONTEND (UI): http://localhost:5173
+echo BACKEND (API): http://localhost:5000
+echo.
+echo NOTE: Always open http://localhost:5173 to see your pages!
 echo ==========================================
 pause

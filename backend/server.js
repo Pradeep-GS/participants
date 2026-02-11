@@ -54,14 +54,21 @@ if (isProduction) {
     }
 } else {
     console.log('Mode: Development');
+    // In development, redirect root to the Vite dev server
     app.get('/', (req, res) => {
+        res.redirect('http://localhost:5173');
+    });
+
+    // Also keep the helpful message page at /status just in case they need it
+    app.get('/status', (req, res) => {
         res.setHeader('Content-Type', 'text/html');
         res.send(`
-            <div style="font-family: sans-serif; padding: 50px; text-align: center; background: #0f172a; color: #f8fafc; min-height: 100vh;">
-                <h1 style="color: #38bdf8;">VSBECART Backend is Running</h1>
-                <p>To view the app, visit the frontend dev server:</p>
-                <a href="http://localhost:5173" style="color: #38bdf8; font-size: 1.5rem;">http://localhost:5173</a>
-                <p style="margin-top: 30px; color: #94a3b8;">(Or run <code>npm run build</code> in the frontend folder to serve it from this port)</p>
+            <div style="font-family: sans-serif; padding: 50px; text-align: center; background: #0f172a; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <div style="background: rgba(56, 189, 248, 0.1); padding: 40px; border-radius: 24px; border: 1px solid rgba(56, 189, 248, 0.2); max-width: 600px;">
+                    <h1 style="color: #38bdf8; margin-bottom: 20px;">🚀 Backend is Active</h1>
+                    <p style="font-size: 1.2rem; color: #94a3b8;">API is running on port 5000.</p>
+                    <a href="http://localhost:5173" style="display: block; background: #38bdf8; color: #0f172a; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; text-align: center; margin-top: 10px;">Go to Frontend</a>
+                </div>
             </div>
         `);
     });
