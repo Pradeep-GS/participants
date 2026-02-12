@@ -44,7 +44,8 @@ if (isProduction || fs.existsSync(frontendPath)) {
     if (fs.existsSync(frontendPath)) {
         console.log('Mode: Serving Static Files (Frontend dist found)');
         app.use(express.static(frontendPath));
-        app.get('*', (req, res) => {
+        // Express 5 requires named wildcard params — use '/{*splat}' instead of '*'
+        app.get('/{*splat}', (req, res) => {
             // Only serve index.html if it's not an API route (which are already handled above)
             if (!req.path.startsWith('/api')) {
                 res.sendFile(path.resolve(frontendPath, 'index.html'));
