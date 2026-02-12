@@ -6,8 +6,19 @@ const jwt = require('jsonwebtoken');
 exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
+
+        // Check for duplicate username or email (jsonDb doesn't enforce unique)
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Email already registered' });
+        }
+        const existingUsername = await User.findOne({ username });
+        if (existingUsername) {
+            return res.status(400).json({ error: 'Username already taken' });
+        }
+
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ username, email, password: hashedPassword });
+        const user = new User({ username, email, password: hashedPassword, cart: [] });
         await user.save();
 
         // Create an empty cart for the new user

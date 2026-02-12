@@ -1,8 +1,8 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 
 dotenv.config();
 
@@ -24,21 +24,52 @@ app.use('/api/cart', cartRoutes);
 
 // Root API route to confirm server is running
 app.get('/api', (req, res) => {
-    res.json({ message: 'VSBECART API is running', version: '1.0.0' });
+    res.json({ message: 'VSBECART API is running', version: '1.0.0', database: 'jsonDb (StackBlitz compatible)' });
 });
 
-// Database Connection
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.log('DB Connection Error:', err));
+// --- Seed endpoint: allows seeding from the browser in StackBlitz ---
+app.post('/api/seed', async (req, res) => {
+    try {
+        const seedData = require('./seedData');
+        const Product = require('./models/Product');
+        const User = require('./models/User');
+        const Cart = require('./models/Cart');
+
+        await Product.deleteMany();
+        await User.deleteMany();
+        await Cart.deleteMany();
+        await Product.insertMany(seedData);
+
+        res.json({ message: 'Database seeded successfully', productsCount: seedData.length });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// Also seed on startup if products collection is empty
+(async () => {
+    try {
+        const Product = require('./models/Product');
+        const count = await Product.countDocuments();
+        if (count === 0) {
+            const seedData = require('./seedData');
+            await Product.insertMany(seedData);
+            console.log(`Auto-seeded ${seedData.length} products into jsonDb`);
+        } else {
+            console.log(`jsonDb: ${count} products already exist, skipping auto-seed`);
+        }
+    } catch (e) {
+        console.error('Auto-seed error:', e.message);
+    }
+})();
+
+console.log('Database: Using jsonDb (JSON file-based, StackBlitz compatible)');
 
 // --- Production / StackBlitz Setup ---
 // Serve frontend static files
 const frontendPath = path.join(__dirname, '../frontend/dist');
 const isStackBlitz = process.env.STACKBLITZ || process.env.STKBLITZ || !!process.env.PROJECT_ID;
 const isProduction = process.env.NODE_ENV === 'production' || isStackBlitz;
-
-const fs = require('fs');
 
 if (isProduction || fs.existsSync(frontendPath)) {
     if (fs.existsSync(frontendPath)) {
@@ -66,7 +97,6 @@ if (isProduction || fs.existsSync(frontendPath)) {
     }
 } else {
     console.log('Mode: Development');
-    // In local development, show a status page instead of a blind redirect to localhost
     app.get('/', (req, res) => {
         res.setHeader('Content-Type', 'text/html');
         res.send(`
@@ -76,6 +106,7 @@ if (isProduction || fs.existsSync(frontendPath)) {
                     <p style="font-size: 1.2rem; color: #94a3b8;">The backend server is running successfully.</p>
                     <div style="margin: 20px 0; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: left;">
                         <p><strong>API Endpoint:</strong> <code>/api</code></p>
+                        <p><strong>Database:</strong> jsonDb (StackBlitz compatible)</p>
                         <p><strong>Status:</strong> Online</p>
                     </div>
                     <p style="color: #64748b; font-size: 0.9rem;">If you are running the frontend separately (Vite), please open the frontend URL directly.</p>
@@ -89,4 +120,3 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-
