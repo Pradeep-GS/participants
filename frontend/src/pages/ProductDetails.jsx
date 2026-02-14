@@ -11,14 +11,7 @@ function ProductDetails() {
 
     useEffect(() => {
         const fetchProduct = async () => {
-            try {
-                const response = await api.get(`/products/${id}`);
-                setProduct(response.data);
-                setLoading(false);
-            } catch (err) {
-                console.error('Fetch Product Error:', err);
-                setLoading(false);
-            }
+            // TODO: Fetch product details from API
         };
         fetchProduct();
     }, [id]);

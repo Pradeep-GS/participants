@@ -13,14 +13,7 @@ function Home() {
     }, []);
 
     const fetchProducts = async () => {
-        try {
-            const response = await api.get('/products');
-            setProducts(response.data);
-            setLoading(false);
-        } catch (err) {
-            console.error('Fetch Error:', err.response?.data?.message || err.message);
-            setLoading(false);
-        }
+        // TODO: Fetch products from API
     };
 
     const handleCardClick = (id) => {

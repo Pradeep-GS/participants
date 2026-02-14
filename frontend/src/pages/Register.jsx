@@ -13,12 +13,7 @@ function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            await api.post('/auth/register', formData);
-            navigate('/login');
-        } catch (err) {
-            setError(err.response?.data?.error || 'Registration failed');
-        }
+        //TODO DO REGISTRATION PROCESS 
     };
 
     return (

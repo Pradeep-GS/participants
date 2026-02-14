@@ -13,13 +13,7 @@ function Login({ onLogin }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await api.post('/auth/login', formData);
-            onLogin(response.data.user, response.data.token);
-            navigate('/');
-        } catch (err) {
-            setError(err.response?.data?.message || 'Login failed');
-        }
+        // TODO: Handle login
     };
 
     return (

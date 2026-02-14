@@ -18,14 +18,7 @@ function Cart() {
     }, [navigate]);
 
     const fetchCart = async () => {
-        try {
-            const response = await api.get('/cart');
-            setCartItems(Array.isArray(response.data) ? response.data : []);
-            setLoading(false);
-        } catch (err) {
-            console.error('Fetch Cart Error:', err);
-            setLoading(false);
-        }
+        // TODO: Fetch cart items from API
     };
 
     const handleRemove = async (productId) => {
