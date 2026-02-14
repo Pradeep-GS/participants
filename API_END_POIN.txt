@@ -1,0 +1,28 @@
+API ENDPOINTS DOCUMENTATION
+==========================
+
+BASE URL: https://backend-05s5.onrender.com
+
+1. AUTHENTICATION
+-----------------
+POST /auth/register
+- Body: { username, email, password }
+- Purpose: Register a new user
+
+POST /auth/login
+- Body: { email, password }
+- Purpose: Authenticate user and receive token
+
+2. PRODUCTS
+-----------
+GET /products
+- Purpose: Fetch all products
+
+GET /products/:id
+- Purpose: Fetch specific product details by ID
+
+3. CART
+-------
+GET /cart
+- Headers: { Authorization: Bearer <token> }
+- Purpose: Fetch logged-in user's cart items
